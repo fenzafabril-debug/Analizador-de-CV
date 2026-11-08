@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Tu CV suma en un estudio jurídico? — Academia Prudentia</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@600;700;800&family=Montserrat:wght@400;500;600;700&display=swap');
+
+  :root{
+    --darkv:#2D1F4B;
+    --purple:#462A82;
+    --lime:#C8D971;
+    --gold:#C9B87A;
+    --offwhite:#F3F2F7;
+    --ink:#241A3D;
+    --muted:#6E6683;
+    --red:#B0392F;
+    --amber:#A9791F;
+    --green:#5A7302;
+    --paper:#FBFAF7;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--offwhite);
+    font-family:'Montserrat',sans-serif;
+    color:var(--ink);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    padding:28px 16px 60px;
+  }
+  .wrap{width:100%;max-width:480px;}
+
+  .brand{
+    text-align:center;
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:3px;
+    color:var(--purple);
+    margin-bottom:6px;
+  }
+  h1{
+    font-family:'League Spartan',sans-serif;
+    font-weight:800;
+    font-size:28px;
+    line-height:1.15;
+    color:var(--darkv);
+    text-align:center;
+    margin:0 0 10px;
+  }
+  .sub{
+    text-align:center;
+    color:var(--muted);
+    font-size:14.5px;
+    line-height:1.5;
+    margin:0 0 28px;
+    padding:0 6px;
+  }
+
+  /* ---- upload zone ---- */
+  .folio{
+    position:relative;
+    background:var(--paper);
+    border:2px dashed var(--gold);
+    border-radius:6px;
+    padding:34px 20px;
+    text-align:center;
+    cursor:pointer;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .folio.drag{border-color:var(--purple);background:#F4F0FF;}
+  .folio::before{
+    content:"";
+    position:absolute; top:10px; left:10px; right:10px; bottom:10px;
+    border:1px solid rgba(70,42,130,0.15);
+    border-radius:3px;
+    pointer-events:none;
+  }
+  .folio-icon{font-size:34px;line-height:1;margin-bottom:12px;}
+  .folio-text{font-weight:600;color:var(--darkv);font-size:15px;margin-bottom:4px;}
+  .folio-hint{font-size:12.5px;color:var(--muted);}
+  input[type=file]{display:none;}
+
+  .filename-row{
+    margin-top:14px;
+    display:none;
+    align-items:center;
+    gap:10px;
+    background:#fff;
+    border:1px solid #E3DEF0;
+    border-radius:8px;
+    padding:10px 14px;
+    font-size:13.5px;
+    color:var(--ink);
+  }
+  .filename-row.show{display:flex;}
+  .filename-row .fx{color:var(--muted);cursor:pointer;font-weight:700;margin-left:auto;}
+
+  button.primary{
+    width:100%;
+    margin-top:16px;
+    background:var(--purple);
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    padding:15px;
+    font-family:'League Spartan',sans-serif;
+    font-weight:700;
+    font-size:16px;
+    letter-spacing:.3px;
+    cursor:pointer;
+    display:none;
+    transition:background .15s ease, transform .1s ease;
+  }
+  button.primary.show{display:block;}
+  button.primary:active{transform:scale(0.98);}
+  button.primary:disabled{background:#9F8FC2;cursor:default;}
+
+  button.ghost{
+    width:100%;
+    margin-top:14px;
+    background:transparent;
+    color:var(--purple);
+    border:1.5px solid var(--purple);
+    border-radius:8px;
+    padding:13px;
+    font-family:'Montserrat',sans-serif;
+    font-weight:700;
+    font-size:14px;
+    cursor:pointer;
+  }
+
+  /* ---- transition ---- */
+  .transition-step{display:none;}
+  .transition-step.show{display:block;animation:fadein .3s ease;}
+  .transition-icon{font-size:36px;text-align:center;margin-bottom:14px;}
+  .transition-title{
+    font-family:'League Spartan',sans-serif;
+    font-weight:700;
+    font-size:19px;
+    color:var(--darkv);
+    text-align:center;
+    margin:0 0 10px;
+    line-height:1.3;
+  }
+  .transition-text{
+    text-align:center;
+    font-size:14px;
+    color:var(--muted);
+    line-height:1.55;
+    margin:0 0 24px;
+    padding:0 8px;
+  }
+
+  /* ---- questionnaire ---- */
+  .quiz-step{display:none;}
+  .quiz-step.show{display:block;animation:fadein .25s ease;}
+
+  .quiz-top-bar{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    margin-bottom:18px;
+    min-height:32px;
+  }
+  .quiz-back{
+    position:absolute;
+    left:0;
+    background:none;
+    border:none;
+    color:var(--purple);
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+    padding:4px 8px;
+    border-radius:6px;
+    display:none;
+  }
+  .quiz-back.show{display:block;}
+  .quiz-back:hover{background:#F4F0FF;}
+  .quiz-progress{
+    display:flex;
+    gap:6px;
+  }
+  .quiz-dot{
+    width:8px;height:8px;
+    border-radius:50%;
+    background:#E3DEF0;
+    transition:background .2s ease;
+  }
+  .quiz-dot.active{background:var(--purple);}
+  .quiz-dot.done{background:var(--lime);}
+
+  .quiz-counter{
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:1px;
+    color:var(--muted);
+    text-align:center;
+    margin-bottom:16px;
+  }
+  .quiz-q{
+    font-family:'League Spartan',sans-serif;
+    font-weight:700;
+    font-size:17px;
+    color:var(--darkv);
+    text-align:center;
+    margin:0 0 6px;
+    line-height:1.3;
+  }
+  .quiz-hint{
+    text-align:center;
+    font-size:12.5px;
+    color:var(--muted);
+    margin:0 0 18px;
+    line-height:1.45;
+  }
+  .chips{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    justify-content:center;
+    margin-bottom:8px;
+  }
+  .chip{
+    background:#fff;
+    border:1.5px solid #E3DEF0;
+    border-radius:24px;
+    padding:10px 20px;
+    font-family:'Montserrat',sans-serif;
+    font-size:14px;
+    font-weight:600;
+    color:var(--ink);
+    cursor:pointer;
+    transition:all .15s ease;
+    user-select:none;
+  }
+  .chip:hover{border-color:var(--purple);background:#F4F0FF;}
+  .chip.selected{
+    border-color:var(--purple);
+    background:var(--purple);
+    color:#fff;
+  }
+
+  /* ---- loading ---- */
+  .loading{
+    display:none;
+    text-align:center;
+    padding:50px 10px;
+  }
+  .loading.show{display:block;}
+  .spinner{
+    width:38px;height:38px;
+    margin:0 auto 18px;
+    border:3px solid #E3DEF0;
+    border-top-color:var(--purple);
+    border-radius:50%;
+    animation:spin .8s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .loading-text{color:var(--muted);font-size:14px;font-weight:500;}
+
+  /* ---- result ---- */
+  .result{display:none;}
+  .result.show{display:block;animation:fadein .3s ease;}
+  @keyframes fadein{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+  .stamp-zone{
+    display:flex;
+    justify-content:center;
+    padding:18px 0 8px;
+  }
+  .stamp{
+    width:148px;height:148px;
+    border-radius:50%;
+    border:4px solid var(--stampcolor,var(--purple));
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    transform:rotate(-7deg);
+    box-shadow:0 0 0 4px rgba(0,0,0,0.02), 0 8px 22px -6px rgba(70,42,130,0.25);
+    animation:stampin .4s cubic-bezier(.2,1.4,.4,1);
+    position:relative;
+  }
+  .stamp::after{
+    content:"";
+    position:absolute; inset:8px;
+    border:1px dashed var(--stampcolor,var(--purple));
+    border-radius:50%;
+    opacity:.5;
+  }
+  @keyframes stampin{
+    0%{transform:rotate(-7deg) scale(1.6);opacity:0;}
+    70%{transform:rotate(-7deg) scale(0.96);opacity:1;}
+    100%{transform:rotate(-7deg) scale(1);}
+  }
+  .stamp-score{
+    font-family:'League Spartan',sans-serif;
+    font-weight:800;
+    font-size:40px;
+    color:var(--stampcolor,var(--purple));
+    line-height:1;
+  }
+  .stamp-outof{
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:1.5px;
+    color:var(--stampcolor,var(--purple));
+    margin-top:2px;
+  }
+
+  .veredicto{
+    font-family:'League Spartan',sans-serif;
+    font-weight:700;
+    font-size:19px;
+    text-align:center;
+    color:var(--darkv);
+    line-height:1.3;
+    padding:14px 10px 22px;
+  }
+
+  .block-title{
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:1.5px;
+    color:var(--muted);
+    margin:22px 0 10px 2px;
+  }
+  ul.blist{
+    list-style:none;
+    margin:0 0 4px;
+    padding:0;
+  }
+  ul.blist li{
+    background:#fff;
+    border-left:3px solid var(--lime);
+    border-radius:4px;
+    padding:11px 12px;
+    margin-bottom:8px;
+    font-size:14px;
+    line-height:1.4;
+    box-shadow:0 1px 4px rgba(0,0,0,0.04);
+  }
+  ul.blist.warn li{border-left-color:var(--red);}
+  .bullet-row{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+  }
+  .bullet-row .mark{font-weight:800;flex-shrink:0;}
+  .bullet-row .mark.ok{color:var(--green);}
+  .bullet-row .mark.warn{color:var(--red);}
+
+  .expand-toggle{
+    display:inline-block;
+    margin-top:6px;
+    font-size:12.5px;
+    font-weight:700;
+    color:var(--purple);
+    cursor:pointer;
+    user-select:none;
+    padding-left:22px;
+  }
+  .expand-toggle:hover{text-decoration:underline;}
+  .expand-detail{
+    display:none;
+    margin-top:8px;
+    padding:10px 12px 10px 22px;
+    background:#F9F8FC;
+    border-radius:4px;
+    font-size:13px;
+    line-height:1.55;
+    color:var(--ink);
+  }
+  .expand-detail.open{display:block;animation:fadein .2s ease;}
+
+  /* ---- next step section ---- */
+  .next-step{
+    margin-top:28px;
+    background:linear-gradient(135deg,#F4F0FF 0%,var(--offwhite) 100%);
+    border:1px solid #E3DEF0;
+    border-radius:10px;
+    padding:20px 18px;
+  }
+  .next-step-title{
+    font-family:'League Spartan',sans-serif;
+    font-weight:700;
+    font-size:16px;
+    color:var(--darkv);
+    margin:0 0 8px;
+  }
+  .next-step-text{
+    font-size:13.5px;
+    line-height:1.55;
+    color:var(--ink);
+    margin:0 0 16px;
+  }
+  .next-step-text strong{color:var(--purple);}
+
+  .cta-btn{
+    display:block;
+    width:100%;
+    text-align:center;
+    background:var(--purple);
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    padding:14px;
+    font-family:'League Spartan',sans-serif;
+    font-weight:700;
+    font-size:15px;
+    letter-spacing:.3px;
+    cursor:pointer;
+    text-decoration:none;
+    transition:background .15s ease;
+    margin-bottom:10px;
+  }
+  .cta-btn:hover{background:var(--darkv);}
+  .cta-btn.secondary{
+    background:transparent;
+    color:var(--purple);
+    border:1.5px solid var(--purple);
+  }
+  .cta-btn.secondary:hover{background:#F4F0FF;}
+
+  /* ---- video cards ---- */
+  .video-section{margin-top:18px;}
+  .video-section-label{
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:1.2px;
+    color:var(--muted);
+    margin-bottom:10px;
+  }
+  .video-card{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    background:#fff;
+    border:1px solid #E3DEF0;
+    border-radius:8px;
+    padding:12px 14px;
+    margin-bottom:8px;
+    text-decoration:none;
+    color:var(--ink);
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .video-card:hover{border-color:var(--purple);background:#FDFCFF;}
+  .video-card .yt-icon{
+    flex-shrink:0;
+    width:32px;height:32px;
+    background:var(--red);
+    border-radius:6px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .video-card .yt-icon svg{width:16px;height:16px;fill:#fff;}
+  .video-card .vc-title{
+    font-size:13px;
+    font-weight:600;
+    line-height:1.35;
+  }
+
+  /* ---- social bar ---- */
+  .social-bar{
+    margin-top:24px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    padding:18px 0 6px;
+    border-top:1px solid #E3DEF0;
+  }
+  .social-bar-label{
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:1.5px;
+    color:var(--muted);
+    margin-bottom:2px;
+  }
+  .social-links{
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .social-links a{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:13px;
+    font-weight:600;
+    color:var(--purple);
+    text-decoration:none;
+    padding:8px 14px;
+    border-radius:8px;
+    background:#fff;
+    border:1px solid #E3DEF0;
+    transition:background .15s ease;
+  }
+  .social-links a:hover{background:#F4F0FF;}
+  .social-links a svg{width:16px;height:16px;flex-shrink:0;}
+
+  .error-box{
+    display:none;
+    background:#FBEDEA;
+    border:1px solid #E3B8AD;
+    border-radius:8px;
+    padding:16px;
+    font-size:13.5px;
+    color:var(--red);
+    margin-top:14px;
+    line-height:1.5;
+  }
+  .error-box.show{display:block;}
+
+  .foot{
+    text-align:center;
+    margin-top:34px;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:2px;
+    color:var(--muted);
+    opacity:.7;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">ACADEMIA PRUDENTIA</div>
+  <h1>¿Tu CV suma en un estudio jurídico?</h1>
+  <p class="sub">Subí tu CV y te decimos, sin vueltas, si hoy tenés algo real para aportarle a un estudio. Cada CV mal armado que mandás es una oportunidad que quemás.</p>
+
+  <!-- STEP 1: UPLOAD -->
+  <div id="uploadStep">
+    <div class="folio" id="folio">
+      <div class="folio-icon">📄</div>
+      <div class="folio-text">Subí tu CV</div>
+      <div class="folio-hint">PDF, JPG o PNG</div>
+      <input type="file" id="fileInput" accept="application/pdf,image/png,image/jpeg">
+    </div>
+    <div class="filename-row" id="filenameRow">
+      <span id="filenameText"></span>
+      <span class="fx" id="clearFile">quitar</span>
+    </div>
+    <button class="primary" id="analyzeBtn">Siguiente →</button>
+    <div class="error-box" id="errorBox"></div>
+  </div>
+
+  <!-- STEP 1.5: TRANSITION -->
+  <div class="transition-step" id="transitionStep">
+    <div class="transition-icon">🔍</div>
+    <div class="transition-title">Antes de analizar tu CV, unas preguntas rápidas</div>
+    <div class="transition-text">Nos sirven para entender tu situación y darte un diagnóstico más preciso — no genérico.</div>
+    <button class="primary show" id="startQuizBtn">Dale, arrancamos →</button>
+  </div>
+
+  <!-- STEP 2: QUESTIONNAIRE -->
+  <div class="quiz-step" id="quizStep">
+    <div class="quiz-top-bar">
+      <button class="quiz-back" id="quizBackBtn">← Volver</button>
+      <div class="quiz-progress" id="quizProgress"></div>
+    </div>
+    <div class="quiz-counter" id="quizCounter"></div>
+    <div class="quiz-q" id="quizQuestion"></div>
+    <div class="quiz-hint" id="quizHint"></div>
+    <div class="chips" id="quizChips"></div>
+  </div>
+
+  <!-- STEP 3: LOADING -->
+  <div class="loading" id="loadingStep">
+    <div class="spinner"></div>
+    <div class="loading-text" id="loadingText">Leyendo tu CV…</div>
+  </div>
+
+  <!-- STEP 4: RESULT -->
+  <div class="result" id="resultStep">
+    <div class="stamp-zone">
+      <div class="stamp" id="stamp">
+        <div class="stamp-score" id="stampScore">–</div>
+        <div class="stamp-outof">SOBRE 10</div>
+      </div>
+    </div>
+    <div class="veredicto" id="veredicto"></div>
+
+    <div class="block-title">LO QUE SUMA</div>
+    <ul class="blist" id="sumaList"></ul>
+
+    <div class="block-title">LO QUE TENÉS QUE MEJORAR</div>
+    <ul class="blist warn" id="reforzarList"></ul>
+
+    <div class="next-step" id="nextStepBox" style="display:none;"></div>
+
+    <div class="social-bar">
+      <div class="social-bar-label">SEGUÍ APRENDIENDO</div>
+      <div class="social-links">
+        <a href="https://www.instagram.com/abrilfenza.derecho/" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          @abrilfenza.derecho
+        </a>
+        <a href="https://www.youtube.com/@AcademiaPrudentia" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          Academia Prudentia
+        </a>
+      </div>
+    </div>
+
+    <button class="ghost" id="resetBtn">Probar con otro CV</button>
+  </div>
+
+  <div class="foot">ACADEMIA PRUDENTIA</div>
+</div>
+
+<script>
+/* =========================================================
+   ANALIZADOR DE CV v3 — Academia Prudentia
+   ========================================================= */
+
+/* ===========================================================
+   CONFIG — endpoint del proxy (Vercel) que guarda la API key
+   de OpenAI y reenvía el pedido. Reemplazá por la URL real.
+   Ej: https://analizador-de-cv.vercel.app/api/analizar-cv
+   El proxy recibe este JSON (formato OpenAI Chat Completions),
+   le agrega la Authorization con la OPENAI_API_KEY, llama a
+   api.openai.com y devuelve la respuesta tal cual.
+   =========================================================== */
+const PROXY_URL = "https://analizadordecv.vercel.app/api/analizar-cv";
+
+const $ = id => document.getElementById(id);
+const folio = $('folio');
+const fileInput = $('fileInput');
+const filenameRow = $('filenameRow');
+const filenameText = $('filenameText');
+const clearFile = $('clearFile');
+const analyzeBtn = $('analyzeBtn');
+const errorBox = $('errorBox');
+const uploadStep = $('uploadStep');
+const quizStep = $('quizStep');
+const loadingStep = $('loadingStep');
+const loadingText = $('loadingText');
+const resultStep = $('resultStep');
+const resetBtn = $('resetBtn');
+const stamp = $('stamp');
+const stampScore = $('stampScore');
+const veredicto = $('veredicto');
+const sumaList = $('sumaList');
+const reforzarList = $('reforzarList');
+const nextStepBox = $('nextStepBox');
+
+let selectedFile = null;
+
+/* ---- YouTube video map by brecha ---- */
+const VIDEOS = {
+  estructura: [
+    { id: 'VafvdLJBU8o', title: 'Por esto NADIE LEE tu CV JURÍDICO (así lo solucionas)' },
+    { id: 'I_GmDILqJUM', title: 'NO necesitás experiencia para conseguir tu primer trabajo jurídico' },
+    { id: 'AFN7xWyyZ1Q', title: 'Así consiguió su PRIMER EMPLEO JURÍDICO en 90 DÍAS' }
+  ],
+  experiencia: [
+    { id: 'ralH27i9A0M', title: 'Cómo TRABAJAR en un estudio JURÍDICO siendo ESTUDIANTE' },
+    { id: 'JBgumv_tsk0', title: 'Errores comunes en la procuración jurídica' },
+    { id: 'B56g1tUeMT4', title: 'De estudiante a profesional proactivo en derecho' },
+    { id: 'd40TPdFdiuc', title: 'Cómo Lucía pasó de estudiante a trabajar en un estudio jurídico' }
+  ],
+  formacion: [
+    { id: 'Xf03QqAyP5g', title: '¿Cómo emprender en Derecho siendo estudiantes?' },
+    { id: '7Ne7L4jbRH0', title: 'Como ganar más que el 99% de abogados (clase filtrada)' },
+    { id: 'W97O-LOCp5c', title: 'DEJA de escuchar a todo el mundo' }
+  ],
+  listo: [
+    { id: 'IfS4DHDlVx4', title: 'Masterclass filtrada: Cómo diferenciarte en el mundo jurídico' },
+    { id: 'AFN7xWyyZ1Q', title: 'Así consiguió su PRIMER EMPLEO JURÍDICO en 90 DÍAS' },
+    { id: 'VafvdLJBU8o', title: 'Por esto NADIE LEE tu CV JURÍDICO (así lo solucionas)' }
+  ]
+};
+
+/* ---- Questionnaire definition v3.1 ---- */
+/* Preguntas orientadas a nivel de conciencia del lead, NO a cosas que la IA puede ver del CV */
+const QUESTIONS = [
+  {
+    key: 'etapa',
+    q: '¿En qué etapa estás hoy?',
+    hint: 'Esto nos ayuda a calibrar qué tan cerca estás de tu primer trabajo jurídico.',
+    options: ['Cursando Derecho', 'Terminando la carrera', 'Ya me recibí', 'No estudio Derecho']
+  },
+  {
+    key: 'confianza',
+    q: 'Si mañana te llaman de un estudio jurídico para una entrevista, ¿cómo te sentirías?',
+    hint: 'Acá no hay respuesta incorrecta — queremos entender tu nivel de seguridad.',
+    options: ['Preparada/o', 'Más o menos', 'No sabría qué decir']
+  },
+  {
+    key: 'envios',
+    q: '¿Mandaste este CV a estudios jurídicos?',
+    hint: '',
+    options: ['Sí, varias veces', 'Alguna vez', 'Todavía no']
+  },
+  {
+    key: 'experiencia',
+    q: '¿Tuviste contacto real con el trabajo jurídico?',
+    hint: 'Estudio jurídico, tribunal, práctica profesional, meritorio, patrocinio gratuito.',
+    options: ['Sí, trabajé formalmente', 'Sí, ad honorem o práctica', 'No, ninguno']
+  },
+  {
+    key: 'formacion_practica',
+    q: '¿Hiciste algún curso de práctica jurídica o procuración?',
+    hint: 'No contamos la facultad — hablamos de formación extra enfocada en la práctica.',
+    options: ['Sí', 'No']
+  }
+];
+
+// Conditional: envios = "Sí, varias veces" o "Alguna vez" → preguntar si tuvo respuestas
+const Q_RESPUESTAS = {
+  key: 'respuestas',
+  q: '¿Tuviste respuestas cuando lo mandaste?',
+  hint: '',
+  options: ['Sí, me llamaron', 'Pocas o ninguna', 'Nunca me respondieron']
+};
+
+// Conditional: formacion_practica = "Sí" → preguntar si es alumno
+const Q_ALUMNO = {
+  key: 'es_alumno',
+  q: '¿Sos alumno/a de Academia Prudentia o Procuratio?',
+  hint: '',
+  options: ['Sí', 'No']
+};
+const Q_NIVEL = {
+  key: 'nivel',
+  q: '¿Qué nivel completaste o estás cursando?',
+  hint: '',
+  options: ['N0', 'N1', 'N2']
+};
+
+let quizAnswers = {};
+let quizQueue = [];
+let quizIdx = 0;
+const quizBackBtn = $('quizBackBtn');
+const startQuizBtn = $('startQuizBtn');
+const transitionStep = $('transitionStep');
+
+function buildQuizQueue(){
+  quizQueue = [...QUESTIONS];
+  quizIdx = 0;
+  quizAnswers = {};
+}
+
+function showTransition(){
+  uploadStep.style.display = 'none';
+  transitionStep.classList.add('show');
+}
+
+startQuizBtn.addEventListener('click', () => {
+  transitionStep.classList.remove('show');
+  quizStep.classList.add('show');
+  renderQuizQuestion();
+});
+
+quizBackBtn.addEventListener('click', () => {
+  if (quizIdx > 0){
+    quizIdx--;
+    // Remove answer for current question being revisited
+    const prevQ = quizQueue[quizIdx];
+    delete quizAnswers[prevQ.key];
+    // If we're going back past a conditional question, remove it from the queue
+    // and also remove its answer
+    while (quizQueue.length > QUESTIONS.length && quizIdx < quizQueue.length){
+      const lastQ = quizQueue[quizQueue.length - 1];
+      if (!quizAnswers[lastQ.key] && quizIdx < quizQueue.length - 1){
+        break; // only trim unanswered trailing conditionals
+      }
+      if (!quizAnswers[lastQ.key]){
+        quizQueue.pop();
+        delete quizAnswers[lastQ.key];
+      } else {
+        break;
+      }
+    }
+    renderQuizQuestion();
+  } else {
+    // Go back to transition
+    quizStep.classList.remove('show');
+    transitionStep.classList.add('show');
+  }
+});
+
+function renderQuizQuestion(){
+  if (quizIdx >= quizQueue.length){
+    // Check conditionals before finishing
+    // After envios (if Sí varias or Alguna vez) → ask respuestas
+    if ((quizAnswers.envios === 'Sí, varias veces' || quizAnswers.envios === 'Alguna vez') && !('respuestas' in quizAnswers)){
+      // Insert respuestas right after envios
+      const enviosIdx = quizQueue.findIndex(q => q.key === 'envios');
+      if (enviosIdx >= 0 && !quizQueue.find(q => q.key === 'respuestas')){
+        quizQueue.splice(enviosIdx + 1, 0, Q_RESPUESTAS);
+        renderQuizQuestion();
+        return;
+      }
+    }
+    if (quizAnswers.formacion_practica === 'Sí' && !('es_alumno' in quizAnswers)){
+      quizQueue.push(Q_ALUMNO);
+      renderQuizQuestion();
+      return;
+    }
+    if (quizAnswers.es_alumno === 'Sí' && !('nivel' in quizAnswers)){
+      quizQueue.push(Q_NIVEL);
+      renderQuizQuestion();
+      return;
+    }
+    // All done → analyze
+    quizStep.classList.remove('show');
+    startAnalysis();
+    return;
+  }
+
+  const q = quizQueue[quizIdx];
+  const total = quizQueue.length;
+
+  // Back button
+  quizBackBtn.classList.toggle('show', true); // always show, even on first (goes to transition)
+
+  // Progress dots
+  let dotsHtml = '';
+  for (let i = 0; i < total; i++){
+    const cls = i < quizIdx ? 'quiz-dot done' : (i === quizIdx ? 'quiz-dot active' : 'quiz-dot');
+    dotsHtml += `<div class="${cls}"></div>`;
+  }
+  $('quizProgress').innerHTML = dotsHtml;
+
+  // Counter
+  $('quizCounter').textContent = `${quizIdx + 1} de ${total}`;
+
+  $('quizQuestion').textContent = q.q;
+  $('quizHint').textContent = q.hint || '';
+  $('quizHint').style.display = q.hint ? 'block' : 'none';
+
+  const chipsEl = $('quizChips');
+  chipsEl.innerHTML = '';
+  q.options.forEach(opt => {
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.textContent = opt;
+    chip.addEventListener('click', () => {
+      quizAnswers[q.key] = opt;
+      quizIdx++;
+      renderQuizQuestion();
+    });
+    chipsEl.appendChild(chip);
+  });
+}
+
+/* ---- Loading messages ---- */
+const loadingMessages = [
+  "Leyendo tu CV…",
+  "Buscando señales jurídicas…",
+  "Cruzando tu experiencia con lo que pide un estudio…",
+  "Evaluando estructura y keywords…",
+  "Analizando ángulo y foco del perfil…",
+  "Revisando criterio práctico…",
+  "Redactando el diagnóstico…"
+];
+
+/* ---- File handling ---- */
+folio.addEventListener('click', () => fileInput.click());
+folio.addEventListener('dragover', e => { e.preventDefault(); folio.classList.add('drag'); });
+folio.addEventListener('dragleave', () => folio.classList.remove('drag'));
+folio.addEventListener('drop', e => {
+  e.preventDefault();
+  folio.classList.remove('drag');
+  if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', e => {
+  if (e.target.files.length) handleFile(e.target.files[0]);
+});
+clearFile.addEventListener('click', () => {
+  selectedFile = null;
+  fileInput.value = '';
+  filenameRow.classList.remove('show');
+  analyzeBtn.classList.remove('show');
+});
+
+function handleFile(file){
+  const okTypes = ['application/pdf','image/png','image/jpeg'];
+  if (!okTypes.includes(file.type)){
+    showError('Ese formato no lo podemos leer. Subí un PDF, JPG o PNG.');
+    return;
+  }
+  selectedFile = file;
+  filenameText.textContent = file.name;
+  filenameRow.classList.add('show');
+  analyzeBtn.classList.add('show');
+  errorBox.classList.remove('show');
+}
+
+function showError(msg){
+  errorBox.textContent = msg;
+  errorBox.classList.add('show');
+}
+
+function fileToBase64(file){
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result.split(',')[1]);
+    r.onerror = () => reject(new Error('No se pudo leer el archivo'));
+    r.readAsDataURL(file);
+  });
+}
+
+/* ---- When user clicks "Siguiente" after uploading ---- */
+analyzeBtn.addEventListener('click', () => {
+  if (!selectedFile) return;
+  errorBox.classList.remove('show');
+  buildQuizQueue();
+  showTransition();
+});
+
+/* ---- Reset ---- */
+resetBtn.addEventListener('click', () => {
+  resultStep.classList.remove('show');
+  transitionStep.classList.remove('show');
+  quizStep.classList.remove('show');
+  uploadStep.style.display = 'block';
+  nextStepBox.style.display = 'none';
+  quizAnswers = {};
+  clearFile.click();
+});
+
+/* ---- SYSTEM PROMPT v3 ---- */
+const SYSTEM_PROMPT = `Sos un evaluador experto en CVs para el sector jurídico argentino (estudios jurídicos, procuración, auxiliares jurídicos). Tu criterio combina reglas de estructura de CV (autoridad: Patricia Jebsen, 15 años en RRHH) con un foco específico en valor jurídico aportado.
+
+DETECCIÓN DE ALUMNO:
+El campo "alumno" te lo pasa el sistema según lo que el usuario respondió en el cuestionario previo. NO lo detectes vos del CV. Usá el valor que viene en el contexto del usuario.
+
+REGLAS DE ESTRUCTURA Y ATS:
+- Una sola columna; sin barras de progreso, gráficos ni tablas divisorias (el ATS no las lee).
+- Foto: SÍ suma en Argentina (personaliza), pero mal si está embebida en tablas/columnas.
+- Fechas por AÑO, no por mes (el ATS filtra por mes y te puede dejar afuera).
+- Sustantivos de acción terminados en -ción (Confección, Redacción, Diligenciamiento, Compulsa), no verbos sueltos.
+- Perfil profesional de 4-5 renglones con keywords jurídicas — no "sobre mí" con edad ni valores personales.
+- Nunca deberían aparecer: edad, DNI, estado civil, hijos, nacionalidad, dirección exacta (zona/localidad sí).
+- Formación: primero la carrera, después la institución. Cursos en sección aparte y vigentes.
+- Competencias = una palabra (organización, proactividad). Si se explica con un ejemplo ya es una tarea, no una competencia.
+- Herramientas + idiomas juntos al final, con nivel real.
+
+4 EJES DE EVALUACIÓN (esto define el puntaje):
+
+EJE 1 — ÁNGULO Y FOCO
+¿El CV está escrito desde la solución al empleador o desde el deseo personal?
+PENALIZÁ: frases como "busco oportunidad", "deseo desarrollarme", "estoy en busca de". Un estudio no busca alguien que busca: busca a alguien que ya puede aliviar carga operativa.
+PREMIÁ: perfil que dice qué sabe hacer ("Confección de cédulas y oficios, control de plazos, manejo de PJN y MEV"), no qué quiere lograr.
+
+EJE 2 — COMPETENCIAS OPERATIVAS Y KEYWORDS
+Checklist de habilidades duras que un estudio busca: cédulas, oficios, escritos, PJN, MEV, DEOX, control de plazos, expedientes, notificaciones, diligenciamiento, compulsa.
+Si no aparece NINGUNA de estas keywords → puntaje no puede pasar de 4 por más que la estructura sea impecable.
+IMPORTANTE: la academia solo enseña PJN y MEV. NUNCA menciones Lex Doctor.
+
+EJE 3 — CRITERIO PRÁCTICO
+¿La persona muestra algún indicio de haber aprendido por prueba-error-feedback, aunque sea sin experiencia formal?
+Señales: patrocinio jurídico gratuito, práctica profesional, cursos de procuración, ayudantía de cátedra, simulaciones, voluntariados legales, meritorio en tribunal.
+Si no hay NADA de esto y tampoco experiencia formal → la persona necesita sumar práctica antes de que el CV pueda mejorar.
+
+EJE 4 — PRESENTACIÓN Y TONO
+PENALIZÁ: tono rígido, memorístico, distante ("Estimado responsable de RRHH, me dirijo a usted").
+PREMIÁ: comunicación clara, profesional y directa, sin exceso de formalismo ni de coloquialismo. El tono ideal es el de alguien que sabe hablar con un abogado sin sonar como un telegrama ni como un mail a un amigo.
+
+ESCALA DE PUNTAJE:
+- 0-1: No es un CV o no se puede leer.
+- 2-3: CV 100% no jurídico o con fallas críticas (sin formación, sin keywords, formato ilegible).
+- 4-5: Tiene algo (formación en curso, alguna keyword), pero con brechas serias.
+- 6-7: CV con contenido jurídico real pero con problemas de estructura, keywords o presentación que le restan impacto.
+- 8-9: CV sólido, con experiencia, keywords, estructura y tono bien trabajados.
+- 10: Excepcional — reservá para CVs que realmente no tienen nada que mejorar.
+
+NIVEL DE BRECHA (obligatorio):
+Elegí UNO:
+- "estructura": tiene contenido jurídico pero está mal armado (columnas, fechas por mes, sin keywords, sin perfil profesional).
+- "experiencia": tiene formación pero cero experiencia práctica o contacto real con expedientes/escritos/tribunales.
+- "formacion": no tiene formación jurídica ni se refleja ningún acercamiento al mundo legal.
+- "listo": el CV ya está sólido y la persona tiene con qué competir.
+
+FORMATO DE RESPUESTA — Respondé EXCLUSIVAMENTE con este JSON, sin texto adicional, sin backticks:
+{"puntaje": <entero 0-10>, "brecha": "<estructura|experiencia|formacion|listo>", "veredicto": "<frase corta, directa, tono cercano>", "suma": ["<bullet máx 12 palabras>", "<bullet>", "<bullet opcional>"], "reforzar": [{"problema": "<problema → corrección concreta, máx 18 palabras>", "detalle": "<2-3 oraciones explicando por qué importa y cómo arreglarlo paso a paso, con ejemplo concreto del CV analizado>"}, {"problema": "...", "detalle": "..."}, {"problema": "...", "detalle": "..."}]}
+
+Reglas de tono:
+- Español rioplatense, directo, sin rodeos.
+- Bullets cortos y concretos, fáciles de leer en el celular.
+- Cada "problema" tiene que nombrar el error Y mostrar la corrección con ejemplo.
+- Cada "detalle" expande con el por qué, el cómo y un ejemplo aplicado al CV específico.
+- Sé brutalmente honesto con el puntaje. No infles.
+- Nunca menciones Academia Prudentia, cursos ni ninguna oferta comercial dentro del diagnóstico. Solo el análisis crudo.
+- Nunca menciones Lex Doctor. La academia enseña PJN y MEV únicamente.`;
+
+/* ---- Build context from questionnaire ---- */
+function buildQuizContext(){
+  const lines = ['CONTEXTO DEL CUESTIONARIO PRE-ANÁLISIS (respondido por el usuario antes de que analices):'];
+  const map = {
+    etapa: 'Etapa actual',
+    confianza: 'Nivel de confianza para una entrevista',
+    envios: 'Envíos a estudios jurídicos',
+    respuestas: 'Respuestas obtenidas',
+    experiencia: 'Contacto real con trabajo jurídico',
+    formacion_practica: 'Formación práctica o curso de procuración',
+    es_alumno: '¿Alumno de Academia Prudentia/Procuratio?',
+    nivel: 'Nivel completado'
+  };
+  for (const [k, v] of Object.entries(quizAnswers)){
+    lines.push(`- ${map[k] || k}: ${v}`);
+  }
+  return lines.join('\n');
+}
+
+/* ---- Main analysis ---- */
+async function startAnalysis(){
+  loadingStep.classList.add('show');
+
+  let msgIdx = 0;
+  loadingText.textContent = loadingMessages[0];
+  const msgInterval = setInterval(() => {
+    msgIdx = (msgIdx + 1) % loadingMessages.length;
+    loadingText.textContent = loadingMessages[msgIdx];
+  }, 1800);
+
+  try {
+    const base64Data = await fileToBase64(selectedFile);
+    const isPdf = selectedFile.type === 'application/pdf';
+    // Formato OpenAI (Chat Completions): PDF como "file", imagen como "image_url"
+    const fileBlock = isPdf
+      ? { type: "file", file: { filename: "cv.pdf", file_data: `data:application/pdf;base64,${base64Data}` } }
+      : { type: "image_url", image_url: { url: `data:${selectedFile.type};base64,${base64Data}` } };
+
+    const quizContext = buildQuizContext();
+
+    const response = await fetch(PROXY_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        max_tokens: 1500,
+        response_format: { type: "json_object" },
+        messages: [
+          { role: "system", content: SYSTEM_PROMPT },
+          {
+            role: "user",
+            content: [
+              fileBlock,
+              { type: "text", text: quizContext + "\n\nAnalizá este CV según tu criterio y los 4 ejes. Devolvé solo el JSON pedido." }
+            ]
+          }
+        ]
+      })
+    });
+
+    const data = await response.json();
+    const msg = data.choices && data.choices[0] && data.choices[0].message;
+    if (!msg || !msg.content) throw new Error("Respuesta vacía");
+
+    let clean = msg.content.trim().replace(/^```json/i, '').replace(/^```/, '').replace(/```$/, '').trim();
+    const parsed = JSON.parse(clean);
+
+    renderResult(parsed);
+  } catch (err) {
+    console.error(err);
+    loadingStep.classList.remove('show');
+    uploadStep.style.display = 'block';
+    showError('No pudimos leer ese archivo. Probá con otro PDF o una imagen más nítida.');
+  } finally {
+    clearInterval(msgInterval);
+  }
+}
+
+/* ---- Render result ---- */
+function renderResult(data){
+  loadingStep.classList.remove('show');
+
+  const score = Math.max(0, Math.min(10, parseInt(data.puntaje, 10) || 0));
+  let color = 'var(--purple)';
+  if (score <= 4) color = 'var(--red)';
+  else if (score <= 6) color = 'var(--amber)';
+  else color = 'var(--green)';
+
+  stamp.style.setProperty('--stampcolor', color);
+  stampScore.textContent = score;
+  veredicto.textContent = data.veredicto || '';
+
+  // SUMA
+  sumaList.innerHTML = '';
+  (data.suma || []).forEach(t => {
+    const li = document.createElement('li');
+    li.innerHTML = `<div class="bullet-row"><span class="mark ok">✓</span><span>${esc(t)}</span></div>`;
+    sumaList.appendChild(li);
+  });
+  if (!(data.suma || []).length){
+    const li = document.createElement('li');
+    li.innerHTML = `<div class="bullet-row"><span class="mark warn">–</span><span>No encontramos elementos jurídicos para destacar todavía.</span></div>`;
+    sumaList.appendChild(li);
+  }
+
+  // REFORZAR with expandable detail
+  reforzarList.innerHTML = '';
+  (data.reforzar || []).forEach((item, i) => {
+    const li = document.createElement('li');
+    const problema = typeof item === 'string' ? item : (item.problema || '');
+    const detalle = typeof item === 'string' ? '' : (item.detalle || '');
+
+    let html = `<div class="bullet-row"><span class="mark warn">!</span><span>${esc(problema)}</span></div>`;
+    if (detalle){
+      html += `<div class="expand-toggle" data-idx="${i}">Ver cómo mejorarlo →</div>`;
+      html += `<div class="expand-detail" id="detail-${i}">${esc(detalle)}</div>`;
+    }
+    li.innerHTML = html;
+    reforzarList.appendChild(li);
+  });
+
+  // Attach expand toggles
+  document.querySelectorAll('.expand-toggle').forEach(el => {
+    el.addEventListener('click', () => {
+      const detail = $('detail-' + el.dataset.idx);
+      if (detail.classList.contains('open')){
+        detail.classList.remove('open');
+        el.textContent = 'Ver cómo mejorarlo →';
+      } else {
+        detail.classList.add('open');
+        el.textContent = 'Ocultar ↑';
+      }
+    });
+  });
+
+  // NEXT STEP
+  const isAlumno = quizAnswers.es_alumno === 'Sí';
+  const nivelAlumno = quizAnswers.nivel || null;
+  const brecha = data.brecha || 'formacion';
+
+  renderNextStep(score, isAlumno, nivelAlumno, brecha);
+
+  resultStep.classList.add('show');
+}
+
+/* ---- Render video cards ---- */
+function renderVideoCards(brecha){
+  const vids = VIDEOS[brecha] || VIDEOS.formacion;
+  // Pick max 2 videos
+  const picked = vids.slice(0, 2);
+  let html = '<div class="video-section"><div class="video-section-label">VIDEOS QUE TE VAN A SERVIR</div>';
+  picked.forEach(v => {
+    html += `<a class="video-card" href="https://youtu.be/${v.id}" target="_blank" rel="noopener">
+      <div class="yt-icon"><svg viewBox="0 0 24 24"><path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></div>
+      <div class="vc-title">${esc(v.title)}</div>
+    </a>`;
+  });
+  html += '</div>';
+  return html;
+}
+
+/* ---- Next step logic v3 ---- */
+function renderNextStep(score, isAlumno, nivelAlumno, brecha){
+  let html = '';
+  const videoHtml = renderVideoCards(brecha);
+
+  if (isAlumno) {
+    // --- ALUMNO DETECTADO ---
+    if (score >= 8) {
+      html = `
+        <div class="next-step-title">Tu CV ya compite bien</div>
+        <div class="next-step-text">
+          Se nota que le metiste trabajo y que tenés formación sólida. Ahora lo que te separa del resto no es el CV, es <strong>cómo te movés en una entrevista y cómo te posicionás frente al estudio</strong>. Eso se entrena.
+        </div>
+        ${videoHtml}
+        <a class="cta-btn secondary" href="https://www.instagram.com/abrilfenza.derecho/" target="_blank" rel="noopener" style="margin-top:14px;">Seguí el contenido en Instagram</a>
+      `;
+    } else if (brecha === 'estructura') {
+      // El alumno tiene formación pero el CV no la refleja
+      const nivelMsg = nivelAlumno
+        ? `Hiciste el ${nivelAlumno} y eso te dio herramientas reales.`
+        : 'Tenés formación práctica.';
+      html = `
+        <div class="next-step-title">Tu CV no muestra lo que ya sabés</div>
+        <div class="next-step-text">
+          ${nivelMsg} Pero la estructura del CV le está jugando en contra: <strong>keywords mal ubicadas, formato que el ATS no lee, o un perfil que no vende lo que sabés hacer</strong>. El contenido está, hay que reestructurar la presentación.
+        </div>
+        ${videoHtml}
+      `;
+      if (!nivelAlumno || nivelAlumno === 'N0'){
+        html += `<a class="cta-btn" href="https://academiaprudentia.com/nivel1" target="_blank" rel="noopener" style="margin-top:14px;">Quiero ver el Nivel 1</a>`;
+      }
+    } else if (brecha === 'experiencia') {
+      const nivelMsg = nivelAlumno
+        ? `Ya hiciste el ${nivelAlumno}, que te da base teórica.`
+        : 'Ya arrancaste con formación práctica.';
+      html = `
+        <div class="next-step-title">Falta sumar práctica real al CV</div>
+        <div class="next-step-text">
+          ${nivelMsg} Lo que te falta ahora es <strong>experiencia concreta para mostrar</strong>: manejo de expedientes, redacción de escritos, diligenciamiento, PJN, MEV. Eso es lo que un estudio necesita ver.
+        </div>
+        ${videoHtml}
+      `;
+      if (!nivelAlumno || nivelAlumno === 'N0'){
+        html += `<a class="cta-btn" href="https://academiaprudentia.com/nivel1" target="_blank" rel="noopener" style="margin-top:14px;">Quiero ver el Nivel 1</a>`;
+      }
+    } else {
+      html = `
+        <div class="next-step-title">Buen camino, seguí sumando</div>
+        <div class="next-step-text">
+          Ya tenés base. Lo que necesitás ahora es <strong>profundizar en la práctica y reflejarlo mejor en el CV</strong>. Cada herramienta que sumás es un keyword más que te acerca al filtro de un estudio.
+        </div>
+        ${videoHtml}
+      `;
+    }
+  } else {
+    // --- LEAD FRÍO ---
+    if (score >= 8) {
+      html = `
+        <div class="next-step-title">Tu CV ya está fuerte</div>
+        <div class="next-step-text">
+          Tenés un perfil jurídico con contenido real. A este nivel, lo que marca la diferencia es <strong>cómo te preparás para la entrevista y cómo te posicionás</strong> frente al estudio.
+        </div>
+        ${videoHtml}
+        <a class="cta-btn secondary" href="https://www.youtube.com/@AcademiaPrudentia" target="_blank" rel="noopener" style="margin-top:14px;">Ver más contenido en YouTube</a>
+      `;
+    } else if (brecha === 'estructura') {
+      html = `
+        <div class="next-step-title">Tu CV tiene contenido, pero no lo están leyendo</div>
+        <div class="next-step-text">
+          Tenés experiencia jurídica, pero la forma en que está armado tu CV hace que los filtros ATS lo descarten antes de que un humano lo vea. <strong>Columnas, fechas por mes, keywords ausentes o un perfil genérico</strong> son errores que se corrigen rápido cuando sabés cómo.
+        </div>
+        ${videoHtml}
+        <a class="cta-btn" href="https://academiaprudentia.com/nivelcero-page" target="_blank" rel="noopener" style="margin-top:14px;">Quiero aprender a armar bien mi CV</a>
+      `;
+    } else if (brecha === 'experiencia') {
+      html = `
+        <div class="next-step-title">Estudiás Derecho, pero tu CV todavía no habla de lo jurídico</div>
+        <div class="next-step-text">
+          Estás formándote, y eso está bien. Pero un estudio jurídico necesita ver en tu CV que sabés moverte: <strong>expedientes, escritos, plazos, PJN, MEV, cédulas, oficios</strong>. Hay formas concretas de empezar a sumar esa experiencia antes de tu primer trabajo formal.
+        </div>
+        ${videoHtml}
+        <a class="cta-btn" href="https://academiaprudentia.com/nivelcero-page" target="_blank" rel="noopener" style="margin-top:14px;">Quiero saber cómo empezar</a>
+      `;
+    } else {
+      // brecha === 'formacion'
+      html = `
+        <div class="next-step-title">Todavía no tenés con qué competir en lo jurídico</div>
+        <div class="next-step-text">
+          Tu CV puede estar bien para otros rubros, pero para entrar a un estudio jurídico necesitás <strong>formación y herramientas específicas</strong>: saber qué es un expediente, cómo se redacta un escrito, qué hace un auxiliar jurídico, cómo funciona el PJN. Sin eso, tu CV no pasa el primer filtro.
+        </div>
+        ${videoHtml}
+        <a class="cta-btn" href="https://academiaprudentia.com/nivelcero-page" target="_blank" rel="noopener" style="margin-top:14px;">Quiero ver de qué se trata</a>
+      `;
+    }
+  }
+
+  nextStepBox.innerHTML = html;
+  nextStepBox.style.display = 'block';
+}
+
+function esc(str){
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+</script>
+</body>
+</html>
